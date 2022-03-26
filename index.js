@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+require('console.table')
 
 const db = mysql.createConnection(
     {
@@ -11,8 +12,11 @@ const db = mysql.createConnection(
     console.log('Connected to the staff database.')
 );
 
-// Get all employees
-app.get('/api/employees', (req, res) => {
+db.connect(function (err, data){
+    if (err) throw err
+    init()
+})
+function allEmployees(){
     const sql = `SELECT * FROM employees`;
 
     db.query(sql, (err, rows) => {
@@ -20,15 +24,35 @@ app.get('/api/employees', (req, res) => {
             res.status(500).json({ error: err.message });
             return;
         }
-        res.json({
-            message: 'success',
-            data: rows
-        });
+        console.table(rows)
     });
-});
+}
 
-// Get a single employee
-app.get('/api/employees/:id', (req, res) => {
+function viewDepartments(){
+    const sql = `SELECT * FROM department`;
+
+    db.query(sql, (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        console.table(rows)
+    });
+}
+
+function viewRoles(){
+    const sql = `SELECT * FROM roles`;
+
+    db.query(sql, (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        console.table(rows)
+    });
+}
+
+function findEmployee () {
     const sql = `SELECT * FROM employees WHERE id = ?`;
     const params = [req.params.id];
 
@@ -42,10 +66,9 @@ app.get('/api/employees/:id', (req, res) => {
             data: row
         });
     });
-});
+}
 
-// Delete an employee
-app.delete('/api/employees/:id', (req, res) => {
+function deleteEmployee() {
     const sql = `DELETE FROM employees WHERE id = ?`;
     const params = [req.params.id];
 
@@ -64,10 +87,10 @@ app.delete('/api/employees/:id', (req, res) => {
             });
         }
     });
-});
+}
 
-// Create an employee
-app.post('/api/employees/:id', ({ body }, res) => {
+
+function createEmployee() {
     const errors = iknputCheck(
         body,
         'first_name',
@@ -93,13 +116,35 @@ app.post('/api/employees/:id', ({ body }, res) => {
             data: body
         });
     });
-});
+}
 
-// Default response for any other request (Not Found)
-app.use((req, res) => {
-    res.status(404).end();
-  });
-  
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+
+function init(){
+    inquirer.prompt([
+        {
+            type:"list",
+            choices:["View Employees","View Departments", "View Roles", "Add Department", "Add Role", "Add Employee", "Update Employee Role", "EXIT"],
+            message:"what eould you like to do?",
+            name:"option"
+        }
+    ]).then (function(response){
+        switch(response.option){
+            case "View Employees": allEmployees();
+            break;
+            case "View Departments": viewDepartments();
+            break;
+            case "View Roles": viewRoles();
+            break;
+            case "Add Department": addDepartment();
+            break;
+            case "Add Role": addRole();
+            break;
+            case "Add Employee": createEmployee();
+            break;
+            case "Update Employee Role": updateEmployeeRole();
+            default: db.end();
+            process.exit(0)
+
+        }
+    })
+}
