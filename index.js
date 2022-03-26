@@ -1,13 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 
-const PORT = process.env.PORT || 3000;
-const app = inquirer(); // is this ok?
-
-// is express middleware needed?
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
-
 const db = mysql.createConnection(
     {
         host: 'localhost',
