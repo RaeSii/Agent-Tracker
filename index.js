@@ -52,7 +52,7 @@ app.get('/api/employees/:id', (req, res) => {
 });
 
 // Delete an employee
-app.delete('/api/candidate/:id', (req, res) => {
+app.delete('/api/employees/:id', (req, res) => {
     const sql = `DELETE FROM employees WHERE id = ?`;
     const params = [req.params.id];
 
@@ -61,7 +61,7 @@ app.delete('/api/candidate/:id', (req, res) => {
             res.statusMessage(400).json({ error: res.message });
         } else if (!result.affectedRows) {
             res.json({
-                message: 'Candidate not found'
+                message: 'Employee not found'
             });
         } else {
             res.json({
@@ -72,3 +72,41 @@ app.delete('/api/candidate/:id', (req, res) => {
         }
     });
 });
+
+// Create an employee
+app.post('/api/employees/:id', ({ body }, res) => {
+    const errors = iknputCheck(
+        body,
+        'first_name',
+        'last_name',
+        'role_id'
+    );
+    if (errors) {
+        res.status(400).json({ error: errors });
+        return;
+    }
+
+    const sql = `INSERT INTO employees (first_name, last_name, role_id)
+    VALUES (?,?,?)`;
+    const params = [body.first_name, body.last_name, body.role_id];
+
+    db.query(sql, params, (err, result) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: 'success',
+            data: body
+        });
+    });
+});
+
+// Default response for any other request (Not Found)
+app.use((req, res) => {
+    res.status(404).end();
+  });
+  
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
