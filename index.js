@@ -12,11 +12,11 @@ const db = mysql.createConnection(
     console.log('Connected to the staff database.')
 );
 
-db.connect(function (err, data){
+db.connect(function (err, data) {
     if (err) throw err
     init()
 })
-function allEmployees(){
+function allEmployees() {
     const sql = `SELECT * FROM employees`;
 
     db.query(sql, (err, rows) => {
@@ -25,10 +25,11 @@ function allEmployees(){
             return;
         }
         console.table(rows)
+        init()
     });
 }
 
-function viewDepartments(){
+function viewDepartments() {
     const sql = `SELECT * FROM department`;
 
     db.query(sql, (err, rows) => {
@@ -37,10 +38,11 @@ function viewDepartments(){
             return;
         }
         console.table(rows)
+        init()
     });
 }
 
-function viewRoles(){
+function viewRoles() {
     const sql = `SELECT * FROM roles`;
 
     db.query(sql, (err, rows) => {
@@ -49,10 +51,11 @@ function viewRoles(){
             return;
         }
         console.table(rows)
+        init()
     });
 }
 
-function findEmployee () {
+function findEmployee() {
     const sql = `SELECT * FROM employees WHERE id = ?`;
     const params = [req.params.id];
 
@@ -89,9 +92,26 @@ function deleteEmployee() {
     });
 }
 
+function addDepartment() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'department_name',
+            message: 'Enter Dept Name:'
+        }
+    ]).then(function (response) {
+        const sql = 'INSERT INTO department (name) VALUES( ? );'
+        db.query(sql, response.department_name, function (err, data) {
+            if (err) throw err
+            console.table(data)
+        })
+    })
+}
+
+
 
 function createEmployee() {
-    const errors = iknputCheck(
+    const errors = inputCheck(
         body,
         'first_name',
         'last_name',
@@ -119,31 +139,31 @@ function createEmployee() {
 }
 
 
-function init(){
+function init() {
     inquirer.prompt([
         {
-            type:"list",
-            choices:["View Employees","View Departments", "View Roles", "Add Department", "Add Role", "Add Employee", "Update Employee Role", "EXIT"],
-            message:"what eould you like to do?",
-            name:"option"
+            type: "list",
+            choices: ["View Employees", "View Departments", "View Roles", "Add Department", "Add Role", "Add Employee", "Update Employee Role", "EXIT"],
+            message: "what eould you like to do?",
+            name: "option"
         }
-    ]).then (function(response){
-        switch(response.option){
+    ]).then(function (response) {
+        switch (response.option) {
             case "View Employees": allEmployees();
-            break;
+                break;
             case "View Departments": viewDepartments();
-            break;
+                break;
             case "View Roles": viewRoles();
-            break;
+                break;
             case "Add Department": addDepartment();
-            break;
+                break;
             case "Add Role": addRole();
-            break;
+                break;
             case "Add Employee": createEmployee();
-            break;
+                break;
             case "Update Employee Role": updateEmployeeRole();
             default: db.end();
-            process.exit(0)
+                process.exit(0)
 
         }
     })
