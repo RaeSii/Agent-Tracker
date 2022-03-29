@@ -115,9 +115,20 @@ function addRole() {
             type: 'input',
             name: 'title',
             message: 'Enter New Role Name:'
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'Enter Salary:'
+        },
+        {
+            type: 'input',
+            name: 'title',
+            message: 'Enter Department Number:'
         }
+
     ]).then(function (response) {
-        const sql = 'INSERT INTO roles (title) VALUES( ? )';
+        const sql = 'INSERT INTO roles (title, salary, department_id) VALUES( ?,?,? )';
         db.query(sql, response.title, function (err, data) {
             if (err) throw err
             console.table(data)
@@ -142,12 +153,17 @@ function createEmployee() {
         },
         {
             type: 'input',
-            name: 'role',
-            message: "Enter New Employee's Role:"
-        }
+            name: 'role_id',
+            message: "Enter New Employee's Role ID:"
+        },
+        {
+            type: 'input',
+            name: 'manager_id',
+            message: "Enter New Employee's Manager ID:"
+        },
     ]).then(function (response) {
         
-    const sql = `INSERT INTO employees (first_name, last_name, roles)
+    const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
     VALUES (?,?,?)`;
     db.query(sql, response.createEmployee, function (err, data) {
         if (err) throw err
@@ -156,7 +172,6 @@ function createEmployee() {
     })
 })
 }
-  
 
 
 function init() {
