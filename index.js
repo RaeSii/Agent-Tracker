@@ -100,10 +100,28 @@ function addDepartment() {
             message: 'Enter Dept Name:'
         }
     ]).then(function (response) {
-        const sql = 'INSERT INTO department (name) VALUES( ? );'
+        const sql = 'INSERT INTO department (name) VALUES( ? )';
         db.query(sql, response.department_name, function (err, data) {
             if (err) throw err
             console.table(data)
+            init()
+        })
+    })
+}
+
+function addRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'title',
+            message: 'Enter New Role Name:'
+        }
+    ]).then(function (response) {
+        const sql = 'INSERT INTO roles (title) VALUES( ? )';
+        db.query(sql, response.title, function (err, data) {
+            if (err) throw err
+            console.table(data)
+            init()
         })
     })
 }
@@ -111,32 +129,34 @@ function addDepartment() {
 
 
 function createEmployee() {
-    const errors = inputCheck(
-        body,
-        'first_name',
-        'last_name',
-        'role_id'
-    );
-    if (errors) {
-        res.status(400).json({ error: errors });
-        return;
-    }
-
-    const sql = `INSERT INTO employees (first_name, last_name, role_id)
-    VALUES (?,?,?)`;
-    const params = [body.first_name, body.last_name, body.role_id];
-
-    db.query(sql, params, (err, result) => {
-        if (err) {
-            res.status(400).json({ error: err.message });
-            return;
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'first_name',
+            message: "Enter New Employee's First Name:"
+        },
+        {
+            type: 'input',
+            name: 'last_name',
+            message: "Enter New Employee's Last Name:"
+        },
+        {
+            type: 'input',
+            name: 'role',
+            message: "Enter New Employee's Role:"
         }
-        res.json({
-            message: 'success',
-            data: body
-        });
-    });
+    ]).then(function (response) {
+        
+    const sql = `INSERT INTO employees (first_name, last_name, roles)
+    VALUES (?,?,?)`;
+    db.query(sql, response.createEmployee, function (err, data) {
+        if (err) throw err
+        console.table(data)
+        init()
+    })
+})
 }
+  
 
 
 function init() {
@@ -144,7 +164,7 @@ function init() {
         {
             type: "list",
             choices: ["View Employees", "View Departments", "View Roles", "Add Department", "Add Role", "Add Employee", "Update Employee Role", "EXIT"],
-            message: "what eould you like to do?",
+            message: "What would you like to do?",
             name: "option"
         }
     ]).then(function (response) {
