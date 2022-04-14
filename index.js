@@ -162,7 +162,7 @@ function deleteRole() {
         const sql = 'DELETE FROM roles WHERE id = ?';
         db.query(sql, response.role_id, function (err, data) {
             if (err) throw err
-            console.table(data)
+            console.table(data);
             init()
         })
     })
@@ -185,11 +185,34 @@ function deleteEmployee() {
     })
 }
 
+function updateEmployeeRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'employee_id',
+            message: 'Enter Employee ID:'
+        },
+        {
+            type: 'input',
+            name: 'role_id',
+            message: 'Enter New Role ID:'
+        }
+
+    ]).then(function (response) {
+        const sql = 'UPDATE employees SET role_id = ? WHERE role_id = ?';
+        db.query(sql, [response.employee_id, response.role_id], function (err, data) {
+            if (err) throw err
+            console.table(data)
+            init()
+        })
+    })
+}
+
 function init() {
     inquirer.prompt([
         {
             type: "list",
-            choices: ["View Employees", "View Departments", "View Roles", "Add Department", "Delete Department", "Add Role", "Delete Role", "Add Employee", "Delete Employee", "Update Employee Role", "EXIT"],
+            choices: ["View Employees", "View Departments", "View Roles", "Add Department", "Add Role", "Add Employee","Delete Department",  "Delete Role", "Delete Employee", "Update Employee Role", "EXIT"],
             message: "What would you like to do?",
             name: "option"
         }
