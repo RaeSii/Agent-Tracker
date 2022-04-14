@@ -4,5 +4,24 @@
     "inquirer": "^8.2.2",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3"
-  }
+  },
+  "name": "agent-tracker",
+  "description": "Agent Tracker ",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RaeSii/agent-tracker.git"
+  },
+  "author": "Rachel Schaaf",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RaeSii/agent-tracker/issues"
+  },
+  "homepage": "https://github.com/RaeSii/agent-tracker#readme"
 }
