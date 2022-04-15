@@ -189,18 +189,17 @@ function updateEmployeeRole() {
     inquirer.prompt([
         {
             type: 'input',
-            name: 'employee_id',
-            message: 'Enter Employee ID:'
+            name: 'role_id',
+            message: "Enter Employee's New Role ID:"
         },
         {
             type: 'input',
-            name: 'role_id',
-            message: 'Enter New Role ID:'
+            name: 'employee_id',
+            message: "Enter Employee's ID:"
         }
-
     ]).then(function (response) {
-        const sql = 'UPDATE employees SET role_id = ? WHERE role_id = ?';
-        db.query(sql, [response.employee_id, response.role_id], function (err, data) {
+        const sql = 'UPDATE employees SET role_id = ? WHERE id = ?';
+        db.query(sql, [response.role_id, response.employee_id], function (err, data) {
             if (err) throw err
             console.table(data)
             init()
@@ -237,6 +236,7 @@ function init() {
             case "Delete Employee": deleteEmployee();
                 break;
             case "Update Employee Role": updateEmployeeRole();
+                break;
             default: db.end();
                 process.exit(0)
 
