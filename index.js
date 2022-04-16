@@ -119,19 +119,14 @@ function createEmployee() {
         },
         {
             type: 'input',
-            name: 'department_id',
-            message: "Enter New Employee's Department ID:"
-        },
-        {
-            type: 'input',
             name: 'manager_id',
             message: "Enter New Employee's Manager ID:"
         },
     ]).then(function (response) {
 
-        const sql = `INSERT INTO employees (first_name, last_name, role_id, department_id, manager_id)
-    VALUES (?,?,?,?,?)`;
-        db.query(sql, [response.first_name, response.last_name, response.role_id, response.department_id, response.manager_id], function (err, data) {
+        const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+    VALUES (?,?,?,?)`;
+        db.query(sql, [response.first_name, response.last_name, response.role_id, response.manager_id], function (err, data) {
             if (err) throw err
             console.table(data)
             init()
