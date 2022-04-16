@@ -17,7 +17,7 @@ db.connect(function (err, data) {
     init()
 })
 function allEmployees() {
-    const sql = `SELECT employees.id, first_name, last_name, roles.title, department_id, roles.salary, manager_id FROM employees INNER JOIN roles ON employees.role_id=roles.id`;
+    const sql = `SELECT em.id, first_name, last_name, ro.title, dept.name, ro.salary, manager_id FROM employees as em INNER JOIN roles as ro ON em.role_id=ro.id INNER JOIN department as dept ON ro.department_id=dept.id`;
 
     db.query(sql, (err, rows) => {
         if (err) {
@@ -124,8 +124,7 @@ function createEmployee() {
         },
     ]).then(function (response) {
 
-        const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
-    VALUES (?,?,?,?)`;
+        const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`;
         db.query(sql, [response.first_name, response.last_name, response.role_id, response.manager_id], function (err, data) {
             if (err) throw err
             console.table(data)
