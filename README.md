@@ -35,7 +35,7 @@ $ node index or npm start
 ![GitHub](https://github.com/RaeSii/agent-tracker.git)
 
 #### DEMO
-![Demo Video](https://github.com/RaeSii/agent-tracker/utils/assets/agent-tracker-demo.webm)
+![Demo Video](utils/assets/agent-tracker-demo.webm)
 
 ### Technology
 
