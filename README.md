@@ -49,4 +49,4 @@ $ node index or npm start
 Rachel Schaaf
 
 #### Screenshot
-![Image](https://github.com/RaeSii/agent-tracker/utils/assets/img.png)
+![Image](utils/assets/img.png)
